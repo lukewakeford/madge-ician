@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madge-ician | Console</title>
+    <style>
+        :root { 
+            --bg: #0f0f0f; 
+            --card: #1d1d1f; 
+            --accent: #007aff; 
+            --warning: #ff9500; 
+            --text: #ffffff; 
+            --muted: #888; 
+            --border: rgba(255,255,255,0.1); 
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            justify-content: center; 
+            padding: 40px 20px; 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+
+        /* --- CONNECTION OVERLAY --- */
+        #connection-blocker { 
+            position: fixed; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 15, 15, 0.9); 
+            backdrop-filter: blur(15px); 
+            z-index: 999; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.5s; 
+        }
+
+        #connection-blocker.hidden { opacity: 0; visibility: hidden; }
+
+        .spinner { 
+            width: 40px; height: 40px; 
+            border: 3px solid rgba(255,255,255,0.1); 
+            border-left-color: var(--accent); 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+            margin-bottom: 20px; 
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- LAYOUT --- */
+        .container { width: 100%; max-width: 480px; }
+        
+        .section { 
+            background: var(--card); 
+            border-radius: 24px; 
+            padding: 24px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--border); 
+        }
+
+        .section-header { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 12px; 
+            border-bottom: 1px solid var(--border); 
+        }
+
+        .section-header h2 { 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--muted); 
+            margin: 0; 
+        }
+
+        /* --- INPUT GRID --- */
+        .pad-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 12px; 
+        }
+
+        .pad-btn { 
+            background: #2c2c2e; 
+            border: 2px solid transparent; 
+            border-radius: 14px; 
+            aspect-ratio: 1; 
+            color: var(--muted); 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            font-size: 1rem;
+        }
+
+        .pad-btn.active { 
+            border-color: var(--accent); 
+            color: var(--text); 
+            background: rgba(0, 122, 255, 0.15); 
+            box-shadow: 0 0 15px rgba(0, 122, 255, 0.2);
+        }
+
+        /* --- FORM ELEMENTS --- */
+        .editor-panel { display: none; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 24px; }
+        .editor-panel.visible { display: block; animation: fadeIn 0.3s forwards; }
+
+        .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .input-row label { font-size: 0.9rem; color: #aaa; display: flex; justify-content: space-between; width: 100%; align-items: center; }
+        
+        .val-badge { 
+            color: var(--accent); 
+            font-weight: bold; 
+            background: rgba(0,122,255,0.1); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+        }
+
+        input[type="number"] { 
+            background: #3a3a3c; 
+            border: none; 
+            color: white; 
+            padding: 8px; 
+            border-radius: 8px; 
+            text-align: center; 
+            width: 60px;
+        }
+
+        /* FIXED SQUARE COLOR PICKERS */
+        input[type="color"] { 
+            -webkit-appearance: none;
+            border: none;
+            width: 44px; 
+            height: 44px; 
+            aspect-ratio: 1 / 1;
+            padding: 0; 
+            cursor: pointer; 
+            background: none;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
+
+        input[type="range"] { 
+            width: 100%; 
+            height: 6px; 
+            background: #3a3a3c; 
+            border-radius: 5px; 
+            outline: none; 
+            margin-top: 12px; 
+            -webkit-appearance: none; 
+        }
+
+        input[type="range"]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            width: 20px; 
+            height: 20px; 
+            background: var(--text); 
+            border-radius: 50%; 
+            cursor: pointer; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* --- FOOTER ACTIONS --- */
+        .btn-save { 
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 18px; 
+            border: none; 
+            font-weight: 700; 
+            background: #2c2c2e; 
+            color: #555; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-size: 1rem;
+        }
+
+        .btn-save.dirty { 
+            background: var(--warning); 
+            color: #000; 
+            box-shadow: 0 8px 30px rgba(255, 149, 0, 0.3); 
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="connection-blocker">
+    <div class="spinner"></div>
+    <h2>Hardware Offline</h2>
+    <p>Connect The Madge-ician via USB</p>
+</div>
+
+<div class="container">
+    <header><h1 style="text-align: center; margin-bottom: 30px;">Madge-ician Console</h1></header>
+    
+    <div class="section">
+        <div class="section-header"><h2>Inputs</h2></div>
+        <div class="pad-grid" id="padGrid"></div>
+        
+        <div class="editor-panel" id="editorPanel">
+            <h3 id="editorTitle" style="color: var(--accent); margin-top: 0;">Input Settings</h3>
+            
+            <div class="input-row">
+                <label>MIDI Note <input type="number" id="inp-note" oninput="updateCurrentPad()"></label>
+            </div>
+            
+            <div class="input-row" style="flex-direction: column; align-items: flex-start;">
+                <label>Threshold <span class="val-badge" id="val-thresh">250</span></label>
+                <input type="range" id="inp-thresh" min="0" max="1023" oninput="updateCurrentPad()">
+            </div>
+            
+            <div class="input-row" style="flex-direction: column; align-items: flex-start;">
+                <label>Mask Time (ms) <span class="val-badge" id="val-mask">80</span></label>
+                <input type="range" id="inp-mask" min="0" max="500" oninput="updateCurrentPad()">
+            </div>
+            
+            <div class="input-row">
+                <label>Flash Color <input type="color" id="inp-color" oninput="updateCurrentPad()"></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header"><h2>Global Settings</h2></div>
+        <div class="input-row">
+            <label>Idle Glow <input type="color" id="globalIdle" oninput="updateGlobal()"></label>
+        </div>
+        <div class="input-row">
+            <label>MIDI Channel <input type="number" id="globalChannel" min="1" max="16" oninput="updateGlobal()"></label>
+        </div>
+    </div>
+
+    <button id="saveBtn" class="btn-save" onclick="commitToFlash()">Hardware In Sync</button>
+</div>
+
+<script>
+    let midiOut = null, isDirty = false, selectedPadIndex = null;
+    const pads = Array.from({length: 10}, (_, i) => ({ note: 60+i, threshold: 250, mask: 80, r: 255, g: 0, b: 0 }));
+
+    async function setupMIDI() {
+        if (!navigator.requestMIDIAccess) return;
+        const access = await navigator.requestMIDIAccess({ sysex: true });
+        
+        const scan = () => {
+            const outputs = Array.from(access.outputs.values());
+            const inputs = Array.from(access.inputs.values());
+            midiOut = outputs.find(o => o.name.toLowerCase().match(/madge|tinyusb|esp32/));
+            const midiIn = inputs.find(i => i.name.toLowerCase().match(/madge|tinyusb|esp32/));
+            
+            document.getElementById('connection-blocker').classList.toggle('hidden', !!midiOut);
+            if (midiOut && midiIn) {
+                midiIn.onmidimessage = handleIncomingMIDI;
+                midiOut.send([0x90, 127, 100]); 
+            }
+        };
+
+        access.onstatechange = scan;
+        scan();
+    }
+
+    function handleIncomingMIDI(msg) {
+        const d = msg.data;
+        if (d[0] === 0xF0 && d[1] === 0x7D && d[2] === 0x04) {
+            let pos = 3;
+            const comb = () => (d[pos++] << 7) | d[pos++];
+            document.getElementById('globalChannel').value = d[pos++];
+            document.getElementById('globalIdle').value = rgbToHex(comb(), comb(), comb());
+            for (let i=0; i<10; i++) {
+                pads[i].note = d[pos++]; 
+                pads[i].threshold = comb(); 
+                pads[i].mask = comb();
+                pos++; // skip scanTime
+                pads[i].r = comb(); 
+                pads[i].g = comb(); 
+                pads[i].b = comb();
+            }
+            if (selectedPadIndex !== null) selectPad(selectedPadIndex);
+        }
+    }
+
+    function selectPad(i) {
+        selectedPadIndex = i;
+        document.querySelectorAll('.pad-btn').forEach((b, idx) => b.classList.toggle('active', idx === i));
+        document.getElementById('editorPanel').classList.add('visible');
+        
+        // Friendly display: Input 1-10
+        document.getElementById('editorTitle').innerText = `Input ${i + 1} Settings`;
+        
+        const p = pads[i];
+        document.getElementById('inp-note').value = p.note;
+        document.getElementById('inp-thresh').value = p.threshold;
+        document.getElementById('val-thresh').innerText = p.threshold;
+        document.getElementById('inp-mask').value = p.mask;
+        document.getElementById('val-mask').innerText = p.mask;
+        document.getElementById('inp-color').value = rgbToHex(p.r, p.g, p.b);
+    }
+
+    function updateCurrentPad() {
+        if (selectedPadIndex === null) return;
+        const p = pads[selectedPadIndex];
+        p.note = parseInt(document.getElementById('inp-note').value);
+        p.threshold = parseInt(document.getElementById('inp-thresh').value);
+        p.mask = parseInt(document.getElementById('inp-mask').value);
+        
+        const hex = document.getElementById('inp-color').value;
+        p.r = parseInt(hex.slice(1,3), 16); 
+        p.g = parseInt(hex.slice(3,5), 16); 
+        p.b = parseInt(hex.slice(5,7), 16);
+        
+        document.getElementById('val-thresh').innerText = p.threshold;
+        document.getElementById('val-mask').innerText = p.mask;
+        
+        markDirty(); 
+        sendPadUpdate(selectedPadIndex);
+    }
+
+    function updateGlobal() {
+        const hex = document.getElementById('globalIdle').value;
+        const chan = parseInt(document.getElementById('globalChannel').value) || 1;
+        const r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
+        const split = (v) => [(v >> 7) & 0x7F, v & 0x7F];
+        if (midiOut) midiOut.send([0xF0, 0x7D, 0x02, chan, ...split(r), ...split(g), ...split(b), 0xF7]);
+        markDirty();
+    }
+
+    function markDirty() { 
+        isDirty = true; 
+        const b = document.getElementById('saveBtn'); 
+        b.classList.add('dirty'); 
+        b.innerText = "COMMIT TO FLASH"; 
+    }
+
+    function sendPadUpdate(i) {
+        if (!midiOut) return;
+        const p = pads[i]; 
+        const split = (v) => [(v >> 7) & 0x7F, v & 0x7F];
+        midiOut.send([0xF0, 0x7D, 0x01, i, p.note&0x7F, ...split(p.threshold), ...split(p.mask), 5, ...split(p.r), ...split(p.g), ...split(p.b), 0xF7]);
+    }
+
+    function commitToFlash() { 
+        if (!midiOut || !isDirty) return;
+        midiOut.send([0xF0, 0x7D, 0x03, 0xF7]); 
+        isDirty = false; 
+        const b = document.getElementById('saveBtn'); 
+        b.classList.remove('dirty'); 
+        b.innerText = "SUCCESSFULLY SAVED"; 
+        setTimeout(() => { b.innerText = "Hardware In Sync"; }, 2000);
+    }
+
+    function rgbToHex(r, g, b) { 
+        return "#" + [r, g, b].map(x => Math.min(255, Math.max(0, x)).toString(16).padStart(2, '0')).join(''); 
+    }
+
+    // Initialize Input Grid (1-10)
+    const grid = document.getElementById('padGrid');
+    for (let i = 0; i < 10; i++) {
+        const b = document.createElement('button'); 
+        b.className = 'pad-btn'; 
+        b.innerText = i + 1; // User sees 1-10
+        b.onclick = () => selectPad(i); // Logic stays 0-9
+        grid.appendChild(b);
+    }
+    setupMIDI();
+</script>
+</body>
+</html>

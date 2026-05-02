@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 // Device Identity
-#define DEVICE_NAME   "The Madge-ician"
-#define MANUF_NAME    "lukewakeford.co.uk"
+#define DEVICE_NAME   "Madge-ician"
+#define MANUF_NAME    "console.lukewakeford.co.uk"
 #define RGB_PIN       21
 
 // MIDI Constants

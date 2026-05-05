@@ -36,6 +36,6 @@ If you're modifying the firmware or building the project from scratch:
 ## 📜 License
 Licensed under the **Apache License, Version 2.0**.
 
-You may use, modify, and distribute this project, provided that **clear attribution to the original creator (Luke Wakeford)** is maintained in all copies or substantial portions of the software and hardware designs.
+You may use, modify, and distribute this project provided that attribution to the original repository is maintained in all copies or substantial portions of the software and hardware designs.
 
 Created by [Luke Wakeford](https://github.com/lukewakeford)

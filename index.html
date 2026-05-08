@@ -18,39 +18,24 @@
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            padding: 40px 20px 80px 20px; /* Added more bottom padding for the page */
-            margin: 0; 
-            overflow-x: hidden; 
+            background: var(--bg); color: var(--text); 
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 40px 20px 80px 20px; margin: 0; overflow-x: hidden; 
         }
 
         #connection-blocker { 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(15, 15, 15, 0.9); 
-            backdrop-filter: blur(15px); 
-            z-index: 999; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            transition: 0.5s; 
-            text-align: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(15px); 
+            z-index: 999; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; transition: 0.5s; text-align: center;
         }
 
         #connection-blocker.hidden { opacity: 0; visibility: hidden; }
 
         .spinner { 
-            width: 40px; height: 40px; 
-            border: 3px solid rgba(255,255,255,0.1); 
-            border-left-color: var(--accent); 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
-            margin-bottom: 20px; 
+            width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); 
+            border-left-color: var(--accent); border-radius: 50%; 
+            animation: spin 1s linear infinite; margin-bottom: 20px; 
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -58,53 +43,33 @@
         .container { width: 100%; max-width: 480px; }
         
         .section { 
-            background: var(--card); 
-            border-radius: 24px; 
-            padding: 24px; 
-            margin-bottom: 20px; 
-            border: 1px solid var(--border); 
+            background: var(--card); border-radius: 24px; padding: 24px; 
+            margin-bottom: 20px; border: 1px solid var(--border); 
         }
 
         .section-header { 
-            display: flex; 
-            align-items: center; 
-            margin-bottom: 20px; 
-            padding-bottom: 12px; 
-            border-bottom: 1px solid var(--border); 
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); 
         }
 
         .section-header h2 { 
-            font-size: 0.85rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            color: var(--muted); 
-            margin: 0; 
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 0; 
         }
 
-        .pad-grid { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 12px; 
-        }
+        .pad-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 
         .pad-btn { 
-            background: #2c2c2e; 
-            border: 2px solid transparent; 
-            border-radius: 14px; 
-            aspect-ratio: 1; 
-            color: var(--muted); 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            font-size: 1rem;
+            background: #2c2c2e; border: 2px solid transparent; border-radius: 14px; 
+            aspect-ratio: 1; color: var(--muted); font-weight: 600; cursor: pointer; 
+            transition: 0.2s; font-size: 1rem;
         }
 
         .pad-btn.active { 
-            border-color: var(--accent); 
-            color: var(--text); 
-            background: rgba(0, 122, 255, 0.15); 
-            box-shadow: 0 0 15px rgba(0, 122, 255, 0.2);
+            border-color: var(--accent); color: var(--text); 
+            background: rgba(0, 122, 255, 0.15); box-shadow: 0 0 15px rgba(0, 122, 255, 0.2);
         }
+
+        .pad-btn.disabled { opacity: 0.2; filter: grayscale(1); }
 
         .editor-panel { display: none; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 24px; }
         .editor-panel.visible { display: block; animation: fadeIn 0.3s forwards; }
@@ -113,30 +78,25 @@
         .input-row label { font-size: 0.9rem; color: #aaa; display: flex; justify-content: space-between; width: 100%; align-items: center; }
         
         .val-input { 
-            color: var(--accent); 
-            font-weight: bold; 
-            background: rgba(0,122,255,0.1); 
-            padding: 2px 4px; 
-            border-radius: 4px; 
-            border: none;
-            text-align: center;
-            width: 45px;
-            font-family: inherit;
-            font-size: 0.9rem;
+            color: var(--accent); font-weight: bold; background: rgba(0,122,255,0.1); 
+            padding: 2px 4px; border-radius: 4px; border: none;
+            text-align: center; width: 45px; font-family: inherit; font-size: 0.9rem;
         }
-        .val-input:focus { outline: 1px solid var(--accent); background: rgba(0,122,255,0.2); }
 
         input[type="number"] { 
-            background: #3a3a3c; 
-            border: none; 
-            color: white; 
-            padding: 8px; 
-            border-radius: 8px; 
-            text-align: center; 
-            width: 60px;
+            background: #3a3a3c; border: none; color: white; padding: 8px; 
+            border-radius: 8px; text-align: center; width: 60px;
         }
 
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .note-input-wrapper { display: flex; align-items: center; gap: 8px; }
+
+        .btn-browse {
+            background: #3a3a3c; border: none; color: var(--muted); padding: 8px;
+            border-radius: 8px; cursor: pointer; display: flex; align-items: center; transition: 0.2s;
+        }
+        .btn-browse:hover { color: var(--text); background: #4a4a4c; }
+
+        input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); cursor: pointer; }
 
         input[type="color"] { 
             -webkit-appearance: none; border: none; width: 44px; height: 44px; padding: 0; cursor: pointer; background: none; border-radius: 8px; overflow: hidden;
@@ -146,15 +106,34 @@
         input[type="range"] { width: 100%; height: 6px; background: #3a3a3c; border-radius: 5px; outline: none; margin-top: 12px; -webkit-appearance: none; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--text); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
+        #noteModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-content {
+            background: var(--card); width: 90%; max-width: 400px; border-radius: 24px;
+            padding: 24px; border: 1px solid var(--border); max-height: 80vh; overflow-y: auto;
+        }
+        .note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .note-opt {
+            background: #2c2c2e; border: 1px solid var(--border); padding: 12px; border-radius: 12px;
+            text-align: left; cursor: pointer; color: #aaa; transition: 0.2s;
+        }
+        .note-opt:hover { background: var(--accent); color: white; }
+        .note-opt span { float: right; font-weight: bold; opacity: 0.6; }
+
+        #midi-log {
+            height: 100px; overflow-y: auto; background: #000; border-radius: 12px; padding: 10px;
+            font-family: monospace; font-size: 0.75rem; color: #00ff41; border: 1px solid var(--border);
+        }
+
         .btn-save { width: 100%; padding: 18px; border-radius: 18px; border: none; font-weight: 700; background: #2c2c2e; color: #555; cursor: pointer; transition: 0.3s; font-size: 1rem; }
         .btn-save.dirty { background: var(--warning); color: #000; box-shadow: 0 8px 30px rgba(255, 149, 0, 0.3); }
 
         .btn-reset { background: none; border: 1px solid var(--danger); color: var(--danger); padding: 10px; border-radius: 12px; width: 100%; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin-top: 10px; transition: all 0.2s; }
         .btn-reset:hover { background: var(--danger); color: white; }
 
-        .footer-link { color: var(--muted); text-decoration: none; font-size: 0.8rem; margin-top: 60px; display: inline-block; transition: 0.2s; opacity: 0.6; }
-        .footer-link:hover { opacity: 1; color: var(--accent); }
-        
         .blocker-link { margin-top: 15px; display: inline-block; color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -169,6 +148,14 @@
     <a href="https://github.com/lukewakeford/madge-ician" target="_blank" class="blocker-link">View Documentation on GitHub</a>
 </div>
 
+<div id="noteModal">
+    <div class="modal-content">
+        <h3 style="margin-top: 0;">General MIDI Map</h3>
+        <div class="note-grid" id="noteGrid"></div>
+        <button class="btn-reset" onclick="closeNoteModal()" style="border-color: var(--muted); color: var(--muted); margin-top: 20px;">Cancel</button>
+    </div>
+</div>
+
 <div class="container">
     <header><h1 style="text-align: center; margin-bottom: 30px;">Madge-ician Console</h1></header>
     
@@ -177,9 +164,23 @@
         <div class="pad-grid" id="padGrid"></div>
         
         <div class="editor-panel" id="editorPanel">
-            <h3 id="editorTitle" style="color: var(--accent); margin-top: 0;">Input Settings</h3>
             <div class="input-row">
-                <label>MIDI Note <input type="number" id="inp-note" oninput="updateCurrentPad()"></label>
+                <h3 id="editorTitle" style="color: var(--accent); margin: 0;">Input Settings</h3>
+                <label style="width: auto; display: flex; align-items: center;">
+                    <span style="margin-right: 10px; font-size: 0.7rem; font-weight: bold; color: var(--muted);">ENABLED</span>
+                    <input type="checkbox" id="inp-enabled" onchange="updateCurrentPad()">
+                </label>
+            </div>
+            
+            <div class="input-row">
+                <label>MIDI Note 
+                    <div class="note-input-wrapper">
+                        <input type="number" id="inp-note" min="0" max="127" oninput="updateCurrentPad()">
+                        <button class="btn-browse" onclick="openNoteModal()" title="Browse Drum Presets">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        </button>
+                    </div>
+                </label>
             </div>
             <div class="input-row" style="flex-direction: column; align-items: flex-start;">
                 <label>Threshold <input type="number" class="val-input" id="val-thresh" oninput="syncFromInput('thresh')"></label>
@@ -196,6 +197,14 @@
     </div>
 
     <div class="section">
+        <div class="section-header">
+            <h2>MIDI Monitor</h2>
+            <span onclick="document.getElementById('midi-log').innerHTML=''" style="font-size: 0.7rem; cursor: pointer; color: var(--danger);">CLEAR</span>
+        </div>
+        <div id="midi-log"></div>
+    </div>
+
+    <div class="section">
         <div class="section-header"><h2>Global Settings</h2></div>
         <div class="input-row">
             <label>Idle Glow <input type="color" id="globalIdle" oninput="updateGlobal()"></label>
@@ -203,19 +212,32 @@
         <div class="input-row">
             <label>MIDI Channel <input type="number" id="globalChannel" min="1" max="16" oninput="updateGlobal()"></label>
         </div>
-        <button class="btn-reset" onclick="resetToDefaults()">Reset All Inputs to Defaults</button>
+        <button class="btn-reset" onclick="resetToDefaults()">Reset All Inputs to GM Defaults</button>
     </div>
 
     <button id="saveBtn" class="btn-save" onclick="commitToFlash()">Hardware In Sync</button>
     
     <div style="text-align: center;">
-        <a href="https://github.com/lukewakeford/madge-ician" target="_blank" class="footer-link">GitHub Project & Documentation</a>
+        <a href="https://github.com/lukewakeford/madge-ician" target="_blank" class="footer-link" style="opacity: 0.4; text-decoration: none; font-size: 0.8rem; margin-top: 40px; display: inline-block;">GitHub Project & Documentation</a>
     </div>
 </div>
 
 <script>
     let midiOut = null, isDirty = false, selectedPadIndex = null;
-    const pads = Array.from({length: 10}, (_, i) => ({ note: 60+i, threshold: 300, mask: 80, r: 255, g: 0, b: 0 }));
+    
+    // General MIDI Percussion Map based on your GM screenshot
+    const drumMap = [
+        { name: "Kick (C1)", note: 36 }, { name: "Snare (D1)", note: 38 },
+        { name: "Closed Hat (F#1)", note: 42 }, { name: "Open Hat (A#1)", note: 46 },
+        { name: "Cymbal (C2)", note: 48 }, { name: "Low Tom (A1)", note: 45 },
+        { name: "Mid Tom (B1)", note: 47 }, { name: "High Tom (D2)", note: 50 },
+        { name: "Hand Clap (D#1)", note: 39 }, { name: "Rim Shot (C#1)", note: 37 },
+        { name: "Cowbell (G#2)", note: 56 }, { name: "Clave (D#2)", note: 51 }
+    ];
+
+    const pads = Array.from({length: 10}, (_, i) => ({ 
+        enabled: i < 2 ? 1 : 0, note: 36+i, threshold: 300, mask: 80, r: 255, g: 0, b: 0 
+    }));
 
     async function setupMIDI() {
         if (!navigator.requestMIDIAccess) return;
@@ -237,14 +259,26 @@
 
     function handleIncomingMIDI(msg) {
         const d = msg.data;
+        const log = document.getElementById('midi-log');
+        if ((d[0] & 0xF0) === 0x90 && d[2] > 0) {
+            if (d[1] === 127) return;
+            const chan = (d[0] & 0x0F) + 1;
+            const div = document.createElement('div');
+            div.innerHTML = `<span style="color:var(--accent)">[Note On]</span> Ch:${chan} | Note:${d[1]} | Vel:${d[2]}`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+            if (log.childNodes.length > 25) log.removeChild(log.firstChild);
+        }
         if (d[0] === 0xF0 && d[1] === 0x7D && d[2] === 0x04) {
             let pos = 3;
             const comb = () => (d[pos++] << 7) | d[pos++];
             document.getElementById('globalChannel').value = d[pos++];
             document.getElementById('globalIdle').value = rgbToHex(comb(), comb(), comb());
             for (let i=0; i<10; i++) {
-                pads[i].note = d[pos++]; pads[i].threshold = comb(); pads[i].mask = comb();
+                pads[i].enabled = d[pos++]; pads[i].note = d[pos++]; 
+                pads[i].threshold = comb(); pads[i].mask = comb();
                 pos++; pads[i].r = comb(); pads[i].g = comb(); pads[i].b = comb();
+                document.querySelectorAll('.pad-btn')[i].classList.toggle('disabled', pads[i].enabled == 0);
             }
             if (selectedPadIndex !== null) selectPad(selectedPadIndex);
         }
@@ -256,6 +290,7 @@
         document.getElementById('editorPanel').classList.add('visible');
         document.getElementById('editorTitle').innerText = `Input ${i + 1} Settings`;
         const p = pads[i];
+        document.getElementById('inp-enabled').checked = p.enabled === 1;
         document.getElementById('inp-note').value = p.note;
         document.getElementById('inp-thresh').value = p.threshold;
         document.getElementById('val-thresh').value = p.threshold;
@@ -265,26 +300,32 @@
     }
 
     function syncFromSlider(type) {
-        const val = document.getElementById('inp-' + type).value;
-        document.getElementById('val-' + type).value = val;
+        document.getElementById('val-' + type).value = document.getElementById('inp-' + type).value;
         updateCurrentPad();
     }
 
     function syncFromInput(type) {
-        const val = document.getElementById('val-' + type).value;
-        document.getElementById('inp-' + type).value = val;
+        document.getElementById('inp-' + type).value = document.getElementById('val-' + type).value;
         updateCurrentPad();
     }
 
     function updateCurrentPad() {
         if (selectedPadIndex === null) return;
         const p = pads[selectedPadIndex];
+        p.enabled = document.getElementById('inp-enabled').checked ? 1 : 0;
         p.note = parseInt(document.getElementById('inp-note').value);
         p.threshold = parseInt(document.getElementById('inp-thresh').value);
         p.mask = parseInt(document.getElementById('inp-mask').value);
         const hex = document.getElementById('inp-color').value;
         p.r = parseInt(hex.slice(1,3), 16); p.g = parseInt(hex.slice(3,5), 16); p.b = parseInt(hex.slice(5,7), 16);
+        document.querySelectorAll('.pad-btn')[selectedPadIndex].classList.toggle('disabled', p.enabled == 0);
         markDirty(); sendPadUpdate(selectedPadIndex);
+    }
+
+    function sendPadUpdate(i) {
+        if (!midiOut) return;
+        const p = pads[i]; const split = (v) => [(v >> 7) & 0x7F, v & 0x7F];
+        midiOut.send([0xF0, 0x7D, 0x01, i, p.enabled, p.note&0x7F, ...split(p.threshold), ...split(p.mask), 5, ...split(p.r), ...split(p.g), ...split(p.b), 0xF7]);
     }
 
     function updateGlobal() {
@@ -297,41 +338,51 @@
     }
 
     function resetToDefaults() {
-        if (!confirm("Reset to factory drum defaults?")) return;
-        const drumNotes = [36, 38, 40, 41, 43, 45, 47, 48, 49, 51];
-        document.getElementById('globalChannel').value = 10;
-        document.getElementById('globalIdle').value = "#000000";
-        updateGlobal();
+        if (!confirm("Reset to General MIDI drum layout?")) return;
+        const gmNotes = [36, 38, 42, 46, 39, 45, 47, 50, 48, 37]; 
         for (let i = 0; i < 10; i++) {
-            pads[i].note = drumNotes[i]; pads[i].threshold = 300; pads[i].mask = 80;
-            if (i % 2 === 0) { pads[i].r = 255; pads[i].g = 0; pads[i].b = 0; } 
-            else { pads[i].r = 0; pads[i].g = 0; pads[i].b = 255; }
+            pads[i].enabled = i < 2 ? 1 : 0;
+            pads[i].note = gmNotes[i]; pads[i].threshold = 300; pads[i].mask = 80;
+            pads[i].r = (i%2===0)?255:0; pads[i].g = 0; pads[i].b = (i%2===0)?0:255;
             sendPadUpdate(i);
+            document.querySelectorAll('.pad-btn')[i].classList.toggle('disabled', pads[i].enabled == 0);
         }
         if (selectedPadIndex !== null) selectPad(selectedPadIndex);
         markDirty();
     }
 
-    function markDirty() { isDirty = true; const b = document.getElementById('saveBtn'); b.classList.add('dirty'); b.innerText = "COMMIT TO FLASH"; }
-
-    function sendPadUpdate(i) {
-        if (!midiOut) return;
-        const p = pads[i]; const split = (v) => [(v >> 7) & 0x7F, v & 0x7F];
-        midiOut.send([0xF0, 0x7D, 0x01, i, p.note&0x7F, ...split(p.threshold), ...split(p.mask), 5, ...split(p.r), ...split(p.g), ...split(p.b), 0xF7]);
+    function openNoteModal() {
+        const grid = document.getElementById('noteGrid');
+        grid.innerHTML = '';
+        drumMap.forEach(item => {
+            const btn = document.createElement('div');
+            btn.className = 'note-opt';
+            btn.innerHTML = `${item.name} <span>${item.note}</span>`;
+            btn.onclick = () => {
+                document.getElementById('inp-note').value = item.note;
+                updateCurrentPad();
+                closeNoteModal();
+            };
+            grid.appendChild(btn);
+        });
+        document.getElementById('noteModal').style.display = 'flex';
     }
 
+    function closeNoteModal() { document.getElementById('noteModal').style.display = 'none'; }
+    function markDirty() { isDirty = true; document.getElementById('saveBtn').classList.add('dirty'); document.getElementById('saveBtn').innerText = "COMMIT TO FLASH"; }
     function commitToFlash() { 
         if (!midiOut || !isDirty) return;
         midiOut.send([0xF0, 0x7D, 0x03, 0xF7]); isDirty = false; 
         const b = document.getElementById('saveBtn'); b.classList.remove('dirty'); b.innerText = "SUCCESSFULLY SAVED"; 
         setTimeout(() => { b.innerText = "Hardware In Sync"; }, 2000);
     }
-
     function rgbToHex(r, g, b) { return "#" + [r, g, b].map(x => Math.min(255, Math.max(0, x)).toString(16).padStart(2, '0')).join(''); }
 
     const grid = document.getElementById('padGrid');
     for (let i = 0; i < 10; i++) {
-        const b = document.createElement('button'); b.className = 'pad-btn'; b.innerText = i + 1; b.onclick = () => selectPad(i); grid.appendChild(b);
+        const b = document.createElement('button'); b.className = 'pad-btn'; b.innerText = i + 1;
+        if (pads[i].enabled == 0) b.classList.add('disabled');
+        b.onclick = () => selectPad(i); grid.appendChild(b);
     }
     setupMIDI();
 </script>

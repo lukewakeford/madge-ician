@@ -22,6 +22,7 @@ struct GlobalConfig {
 
 // Per-Pad Settings
 struct InputConfig {
+  bool enabled;
   int note;
   int threshold;
   int maskTime;

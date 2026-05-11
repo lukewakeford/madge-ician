@@ -30,7 +30,7 @@
             align-items: center; justify-content: center; transition: 0.5s; text-align: center;
         }
 
-        #connection-blocker.hidden { opacity: 0; visibility: hidden; }
+        #connection-blocker.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .spinner { 
             width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); 
@@ -134,7 +134,12 @@
         .btn-reset { background: none; border: 1px solid var(--danger); color: var(--danger); padding: 10px; border-radius: 12px; width: 100%; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin-top: 10px; transition: all 0.2s; }
         .btn-reset:hover { background: var(--danger); color: white; }
 
-        .blocker-link { margin-top: 15px; display: inline-block; color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .blocker-link { margin-top: 15px; display: inline-block; color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+        
+        .footer-link { opacity: 0.4; text-decoration: none; font-size: 0.8rem; transition: 0.2s; }
+        .footer-link:hover { opacity: 1; }
+
+        #exitDemoBtn { display: none; margin-top: 20px; color: var(--danger); border-color: var(--danger); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -145,7 +150,10 @@
     <div class="spinner"></div>
     <h2>Hardware Offline</h2>
     <p>Connect The Madge-ician via USB</p>
-    <a href="https://github.com/lukewakeford/madge-ician" target="_blank" class="blocker-link">View Documentation on GitHub</a>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="https://github.com/lukewakeford/madge-ician" target="_blank" class="blocker-link">View Documentation on GitHub</a>
+        <span onclick="enterDemoMode()" class="blocker-link" style="color: var(--muted); font-weight: 400; font-size: 0.8rem;">Enter Demo Mode (Interface Only)</span>
+    </div>
 </div>
 
 <div id="noteModal">
@@ -217,15 +225,15 @@
 
     <button id="saveBtn" class="btn-save" onclick="commitToFlash()">Hardware In Sync</button>
     
-    <div style="text-align: center;">
-        <a href="https://github.com/lukewakeford/madge-ician" target="_blank" class="footer-link" style="opacity: 0.4; text-decoration: none; font-size: 0.8rem; margin-top: 40px; display: inline-block;">GitHub Project & Documentation</a>
+    <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <button id="exitDemoBtn" class="btn-reset" onclick="exitDemoMode()">Exit Demo & Return to Connect</button>
+        <a href="https://github.com/lukewakeford/madge-ician" target="_blank" class="footer-link" style="margin-top: 20px; display: inline-block; color: var(--text);">GitHub Project & Documentation</a>
     </div>
 </div>
 
 <script>
-    let midiOut = null, isDirty = false, selectedPadIndex = null;
+    let midiOut = null, isDirty = false, selectedPadIndex = null, isDemoMode = false;
     
-    // General MIDI Percussion Map based on your GM screenshot
     const drumMap = [
         { name: "Kick (C1)", note: 36 }, { name: "Snare (D1)", note: 38 },
         { name: "Closed Hat (F#1)", note: 42 }, { name: "Open Hat (A#1)", note: 46 },
@@ -243,6 +251,7 @@
         if (!navigator.requestMIDIAccess) return;
         const access = await navigator.requestMIDIAccess({ sysex: true });
         const scan = () => {
+            if (isDemoMode) return;
             const outputs = Array.from(access.outputs.values());
             const inputs = Array.from(access.inputs.values());
             midiOut = outputs.find(o => o.name.toLowerCase().match(/madge|tinyusb|esp32/));
@@ -255,6 +264,23 @@
         };
         access.onstatechange = scan;
         scan();
+    }
+
+    function enterDemoMode() {
+        isDemoMode = true;
+        document.getElementById('connection-blocker').classList.add('hidden');
+        document.getElementById('exitDemoBtn').style.display = 'block';
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.innerText = "DEMO MODE (READ ONLY)";
+        saveBtn.style.opacity = "0.5";
+        saveBtn.style.cursor = "not-allowed";
+        
+        // Populate with dummy data for demo
+        selectPad(0);
+    }
+
+    function exitDemoMode() {
+        location.reload(); // Simplest way to reset state and MIDI listeners
     }
 
     function handleIncomingMIDI(msg) {
@@ -323,7 +349,7 @@
     }
 
     function sendPadUpdate(i) {
-        if (!midiOut) return;
+        if (!midiOut || isDemoMode) return;
         const p = pads[i]; const split = (v) => [(v >> 7) & 0x7F, v & 0x7F];
         midiOut.send([0xF0, 0x7D, 0x01, i, p.enabled, p.note&0x7F, ...split(p.threshold), ...split(p.mask), 5, ...split(p.r), ...split(p.g), ...split(p.b), 0xF7]);
     }
@@ -333,7 +359,7 @@
         const chan = parseInt(document.getElementById('globalChannel').value) || 10;
         const r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
         const split = (v) => [(v >> 7) & 0x7F, v & 0x7F];
-        if (midiOut) midiOut.send([0xF0, 0x7D, 0x02, chan, ...split(r), ...split(g), ...split(b), 0xF7]);
+        if (midiOut && !isDemoMode) midiOut.send([0xF0, 0x7D, 0x02, chan, ...split(r), ...split(g), ...split(b), 0xF7]);
         markDirty();
     }
 
@@ -369,9 +395,16 @@
     }
 
     function closeNoteModal() { document.getElementById('noteModal').style.display = 'none'; }
-    function markDirty() { isDirty = true; document.getElementById('saveBtn').classList.add('dirty'); document.getElementById('saveBtn').innerText = "COMMIT TO FLASH"; }
+    
+    function markDirty() { 
+        if (isDemoMode) return;
+        isDirty = true; 
+        document.getElementById('saveBtn').classList.add('dirty'); 
+        document.getElementById('saveBtn').innerText = "COMMIT TO FLASH"; 
+    }
+
     function commitToFlash() { 
-        if (!midiOut || !isDirty) return;
+        if (!midiOut || !isDirty || isDemoMode) return;
         midiOut.send([0xF0, 0x7D, 0x03, 0xF7]); isDirty = false; 
         const b = document.getElementById('saveBtn'); b.classList.remove('dirty'); b.innerText = "SUCCESSFULLY SAVED"; 
         setTimeout(() => { b.innerText = "Hardware In Sync"; }, 2000);
